@@ -11,6 +11,7 @@
 
 const needle = require('needle');
 
+// fetch IP address
 const fetchMyIP = function(callback) {
   // use request to fetch IP address from JSON API
   const url = "https://api.ipify.org/?format=json";
@@ -31,4 +32,33 @@ const fetchMyIP = function(callback) {
 
 };
 
-module.exports = { fetchMyIP };
+// fetch latitude and longitude
+// input: ip as a string, and a callback
+const fetchCoordsByIP = function(ip, callback) {
+  // pass ip into the function
+  const url = `http://ipwho.is/${ip}`;
+
+  needle.get(url, (error, response, body) => {
+    if (error) {
+      return callback(error, null);
+    }
+
+    const parsedBody = body; // parse the body to check the message
+    if (!parsedBody.success) {
+      const message = `Success status was ${parsedBody.success}. Server message says: ${parsedBody.message} when fetching for IP ${parsedBody.ip}`;
+      callback(Error(message), null);
+      return;
+    }
+
+    const coords = {
+      latitude: body.latitude,
+      longitude: body.longitude
+    };
+
+    return callback(null, coords);
+
+  });
+
+};
+
+module.exports = { fetchMyIP, fetchCoordsByIP };
