@@ -42,6 +42,8 @@ fetchMyIP((error, ip) => {
   
 });
 
+module.exports = { printPassTimes };
+
 /*Error: Success status was false. Server message says: Invalid IP address when fetching for IP 42
 
 fetchCoordsByIP("42", (error, coords) => {
